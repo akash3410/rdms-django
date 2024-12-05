@@ -1,14 +1,14 @@
 {%extends "rdms/layout.html"%}
 
-{% block title %} Register {% endblock %}
+{% block title %} Login {% endblock %}
 
 {% block content %}
     <form method="post">
         {% csrf_token %}
         {{form.as_p}}
-        <button type="submit">Register</button>
-        <a href="{% url 'login_view' %}">
-            <button type="button">Already have an account?..</button>
+        <button type="submit">Login</button>
+        <a href="{% url 'register' %}">
+            <button type="button">Don't have account?..</button>
         </a>
         <a href="{% url 'home_page' %}">
             <button type="button">Cancel</button>

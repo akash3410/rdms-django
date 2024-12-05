@@ -6,9 +6,12 @@ Home
 
 {% block content %} 
     <div>
+        <h1>{{request.user}}</h1>
         <ul>
             <li><a href="{% url 'home_page' %}">Home</a></li>
             <li><a href="{% url 'register' %}">Register</a></li>
+            <li><a href="{% url 'login_view' %}">Login</a></li>
+            <li><a href="{% url 'logout_view' %}">Logout</a></li>
         </ul>
     </div>
 {% endblock %}
