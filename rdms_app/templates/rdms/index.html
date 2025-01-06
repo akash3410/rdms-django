@@ -1,0 +1,24 @@
+{%extends "rdms/layout.html"%}
+
+{% block title %}
+Home
+{%endblock%}
+
+{% block content %} 
+    <div>
+        <div class="bg-dark py-3 text-center">
+            {% if user.is_authenticated %}
+                <a href="{% url 'profile_page' %}" class="text-secondary mx-4 text-decoration-none">Create Another Account</a>
+            {% else %}
+                <a href="{% url 'register' %}" class="text-secondary mx-4 text-decoration-none">Create an Account</a>
+            {% endif %}
+            {% if user.is_authenticated %}
+                <a href="{% url 'profile_page' %}" class="text-secondary mx-4 text-decoration-none">Profile</a>
+                <a href="{% url 'logout_view' %}" class="text-secondary mx-4 text-decoration-none">Logout</a>
+                <img src="{{ request.user.userinfo.profile_picture.url }}" alt="Profile Picture" width="40px" height="40px" class="rounded-circle ms-5">
+            {% else %}
+                <a href="{% url 'login_view' %}" class="text-secondary mx-4 text-decoration-none">Login</a>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,60 @@
+{%extends "rdms/layout.html"%}
+
+{% block title %}
+Home
+{%endblock%}
+
+{% block content %} 
+    <div>
+        <div class="row bg-dark text-white-50 p-3">
+
+            <div class="col-md-10 mt-1">
+                <a href="{% url 'home_page' %}" class="navbar-brand">
+                    {{request.user.first_name | upper}} {{request.user.last_name | upper}}
+                </a>
+                <br>
+                <span class="fs-6"> {{request.user.userinfo.bio}} </span>
+            </div>
+
+            <div class="col-md-2 d-flex align-items-center">
+                {% if request.user.userinfo.profile_picture %}
+                    <img src="{{ request.user.userinfo.profile_picture.url }}" alt="Profile Picture" width="60px" height="60px" class="rounded-circle ms-5">
+                {% else %}
+                    {% load static %}
+                    <img src="{% static 'rdms_app/image/defaultprofile.png'%}" alt="Default Picture" width="60px" height="60px" class="rounded-circle ms-5">
+                {% endif %}
+            </div>
+
+        </div>
+
+        <div class="row mt-3">
+
+            <div class="col-md-9">
+                <span>Username: <span class="text-white-50">{{request.user.username}}</span> </span>
+                <br>
+                <span>Lives In: <span class="text-white-50">{{request.user.userinfo.present_address}}</span></span>
+                <br>
+                <span>From: <span class="text-white-50">{{request.user.userinfo.permanent_address}}</span></span>
+                <br>
+                <span>Phone: <span class="text-white-50">{{request.user.userinfo.secondary_phone}}</span></span>
+                <br>
+                <span>Email: <span class="text-white-50">{{request.user.userinfo.seconday_email}}</span></span>
+                <br>
+                <a href="{% url 'edit_profile_info' %}" class="text-decoration-underline text-success">Edit more Info.....</a>
+            </div>
+
+            <div class="col-md-3">
+                <a class="text-decoration-none ms-2 text-success" ms-1 aria-current="page" href="{% url 'register' %}">Create Another Account</a>
+                <br>
+                <a href="{% url 'login_view' %}" class="ms-2 text-decoration-none text-success">Switch Account</a>
+                <br>
+                <a class="text-decoration-none ms-2 text-success" aria-current="page" href="{% url 'update_view' %}">Update Profile</a>
+                <br>
+                <a class="text-decoration-none ms-2 text-success" aria-current="page" href="{% url 'logout_view' %}">Logout</a>
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}

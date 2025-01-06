@@ -1,0 +1,18 @@
+{%extends "rdms/layout.html"%}
+
+{% block title %}
+Home
+{%endblock%}
+
+{% block content %} 
+    <div>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Save</button>
+            <a href="{% url 'home_page' %}">
+                <button type="button">Cancel</button>
+            </a>
+        </form>
+    </div>
+{% endblock %}
