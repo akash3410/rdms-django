@@ -4,12 +4,17 @@ from .forms import RegisterForm, UpdateForm, UserinfoForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from .models import Userinfo
+from post_app.models import Blog
 
 # Create your views here.
 @login_required
 def profile_page(request):
-    return render(request, "rdms/dashboard.html")
+    blogs = Blog.objects.filter(user=request.user).prefetch_related('categories')
+    if blogs:
+        return render(request, "rdms/dashboard.html", {'blogs': blogs})
+    else:
+        message = "No Post to Show!"
+        return render(request, "rdms/dashboard.html", {'message': message})
 
 def register(request):
     form = RegisterForm()

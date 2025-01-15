@@ -40,9 +40,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rdms_app',
     'users_app',
+    'post_app',
 ]
 
 MIDDLEWARE = [
+    'querycount.middleware.QueryCountMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

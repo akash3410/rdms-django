@@ -1,0 +1,15 @@
+{%extends "rdms/layout.html"%}
+
+{% block title %}
+Home
+{%endblock%}
+
+{% block content %} 
+    <div>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{form.as_p}}
+            <button type="submit">Create Post</button>
+        </form>
+    </div>
+{% endblock %}
