@@ -67,8 +67,10 @@ Home
                             {% endif %}
                         </div>
                         <div class="my-5">
-                            <a href="" class="text-warning text-decoration-none">Update Post</a>
-                            <a href="" class="float-end text-danger text-decoration-none">Delete Post</a>
+                            {% if blog.user == request.user %}
+                                <a href="{% url 'edit_post' blog.id %}" class="text-warning text-decoration-none">Edit Post</a>
+                                <a href="{% url 'delete_post' blog.id %}" class="float-end text-danger text-decoration-none">Delete Post</a>
+                            {% endif %}
                         </div>
                     {% endfor %}
                 </div>
