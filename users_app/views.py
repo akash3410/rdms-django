@@ -1,17 +1,33 @@
-from django.shortcuts import render, HttpResponse, redirect
+from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from .forms import RegisterForm, UpdateForm, UserinfoForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from post_app.models import Blog
+from post_app.forms import CommentForm
 
 # Create your views here.
 @login_required
 def profile_page(request):
     blogs = Blog.objects.filter(user=request.user).prefetch_related('categories')
     if blogs:
-        return render(request, "rdms/dashboard.html", {'blogs': blogs})
+        if request.method == "POST":
+            blog_id = request.POST.get('blog_id')
+            blog = get_object_or_404(Blog, id=blog_id)
+
+            form = CommentForm(request.POST)
+            if form.is_valid():
+                comment = form.save(commit=False)
+                comment.blog = blog
+                comment.user = request.user
+                comment.save()
+                form = CommentForm()
+                return redirect(f'{request.path}#comments-{blog.id}')
+        else:
+            form = CommentForm()
+
+        return render(request, "rdms/dashboard.html", {'blogs': blogs, 'form': form})
     else:
         message = "No Post to Show!"
         return render(request, "rdms/dashboard.html", {'message': message})

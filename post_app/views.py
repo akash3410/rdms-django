@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
-from .forms import BlogForm
+from .forms import BlogForm, CommentForm
 from django.contrib.auth.decorators import login_required
 from .models import Blog
 
@@ -17,6 +17,8 @@ def create_post(request):
     else:
         form = BlogForm()
     return render(request, 'post_app/create_post.html', {'form':form})
+
+
 
 @login_required
 def edit_post(request, blog_id):
