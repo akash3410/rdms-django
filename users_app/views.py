@@ -6,6 +6,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from post_app.models import Blog
 from post_app.forms import CommentForm
+from users_app.models import Userinfo
 
 # Create your views here.
 @login_required
@@ -75,11 +76,16 @@ def update_view(request):
 
 @login_required
 def edit_profile_info(request):
+    user = request.user
+
+    if not hasattr(user, 'userinfo'):
+        Userinfo.objects.create(user=user)
+
     if request.method == 'POST':
-        form = UserinfoForm(request.POST, request.FILES, instance=request.user.userinfo)
+        form = UserinfoForm(request.POST, request.FILES, instance=user.userinfo)
         if form.is_valid():
             form.save()
-            return redirect('home_page')
+            return redirect('profile_page')
     else:
-        form = UserinfoForm(instance=request.user.userinfo)
+        form = UserinfoForm(instance=user.userinfo)
     return render(request, 'users_app/user_info.html', {'form': form})

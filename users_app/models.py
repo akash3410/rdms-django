@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 class Userinfo(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='userinfo')
     bio = models.CharField(max_length=20, null=True, blank=True)
     secondary_phone = models.IntegerField(null=True, blank=True)
     seconday_email = models.EmailField(null=True, blank=True)

@@ -1,11 +1,33 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from .models import Todo, Books, Mybook, Myauthor
 from users_app.models import Userinfo
+from post_app.models import Blog
+from post_app.forms import CommentForm
 
 # Create your views here.
 def home_page(request):
-    return render(request, "rdms/index.html")
+    blogs = Blog.objects.all()
+
+    if blogs:
+        if request.method == "POST":
+            blog_id = request.POST.get('blog_id')
+            blog = get_object_or_404(Blog, id=blog_id)
+
+            form = CommentForm(request.POST)
+            if form.is_valid():
+                comment = form.save(commit=False)
+                comment.blog = blog
+                comment.user = request.user
+                comment.save()
+                form = CommentForm()
+                return redirect(f'{request.path}#comments-{blog.id}')
+        else:
+            form = CommentForm()
+        return render(request, "rdms/index.html", {'blogs': blogs, 'form': form})
+    else:
+        message = "No Post to Show!"
+        return render(request, "rdms/index.html", {'message': message})
 
 # Many to One
 def all_todos(request):
