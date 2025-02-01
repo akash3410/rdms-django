@@ -1,12 +1,13 @@
 from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
 from django.contrib.auth.models import User
-from .forms import RegisterForm, UpdateForm, UserinfoForm
+from .forms import RegisterForm, UpdateForm, UserinfoForm, LoginForm, OtpForm
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from post_app.models import Blog
 from post_app.forms import CommentForm
-from users_app.models import Userinfo
+from users_app.models import Userinfo, Otp
+import random
 
 # Create your views here.
 @login_required
@@ -44,18 +45,46 @@ def register(request):
     return render(request, 'users_app/register.html', {'form': form})
 
 def login_view(request):
-    form = AuthenticationForm()
+    if request.user.is_authenticated:
+        return redirect('home_page')
+    
     if request.method == 'POST':
-        form = AuthenticationForm(data = request.POST)
+        form = LoginForm(data = request.POST)
         if form.is_valid():
             user = form.get_user()
-            login(request, user)
-            return redirect('home_page')
-        else:
-            form = AuthenticationForm(request.POST)
-            return render(request, 'users_app/login.html', {'form': form})
+            otp = ''.join([str(random.randint(0,9)) for _ in range(6)])
+            user_otp, created = Otp.objects.get_or_create(user=user)
+            user_otp.otp = otp
+            user_otp.save()
+            print(f"{user.username}'s {otp}")
+            request.session['pre_otp_user_id'] = user.id
+            return redirect('Otp_verify')
+        
+    form = LoginForm()
     return render(request, 'users_app/login.html', {'form': form})
 
+def Otp_verify(request):
+    user_id = request.session['pre_otp_user_id']
+    if not user_id:
+        return redirect('login_view')
+    
+    user = User.objects.get(id=user_id)
+    user_otp = Otp.objects.get(user=user)
+    if request.method == "POST":
+        form = OtpForm(request.POST)
+        if form.is_valid():
+            otp = form.cleaned_data.get('otp')
+            if otp == user_otp.otp:
+                user_otp.otp = ''
+                user_otp.save()
+                login(request, user)
+                del request.session['pre_otp_user_id']
+                return redirect('profile_page')
+            else:
+                form.add_error('otp', 'invalid otp')
+    else:
+        form = OtpForm()
+    return render(request, 'users_app/otpform.html', {'form': form})
 
 @login_required
 def logout_view(request):

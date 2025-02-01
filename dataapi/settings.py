@@ -131,3 +131,8 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR/'media'
 
 LOGIN_URL = '/user/login/'
+LOGIN_REDIRECT_URL = '/user/profile/'
+LOGOUT_REDIRECT_URL = '/user/rdms/'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'webmaster@localhost'

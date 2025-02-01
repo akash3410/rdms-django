@@ -6,12 +6,15 @@
     <form method="post">
         {% csrf_token %}
         {{form.as_p}}
-        <button type="submit">Login</button>
+        <a href="{% url 'password_reset' %}">
+            <button type="button">Forgot password?..</button>
+        </a>
         <a href="{% url 'register' %}">
             <button type="button">Don't have account?..</button>
         </a>
         <a href="{% url 'home_page' %}">
             <button type="button">Cancel</button>
         </a>
+        <button type="submit">Login</button>
     </form>
 {% endblock %}

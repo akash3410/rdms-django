@@ -1,0 +1,14 @@
+{%extends "rdms/layout.html"%}
+
+{% block title %} Otp Verify {% endblock %}
+
+{% block content %}
+    <div>
+        <h2>Enter OTP</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{form.as_p}}
+            <button type="submit">Verify</button>
+        </form>
+    </div>
+{% endblock %}
